@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Show Current Location on Google Maps</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places"></script>
+    <style>
+      #map {
+        height: 300px; /* Adjust the height as needed */
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Show Current Location on Google Maps</h1>
+
+    <label for="latitudeInput">Latitude:</label>
+    <input type="text" id="latitudeInput" readonly />
+
+    <label for="longitudeInput">Longitude:</label>
+    <input type="text" id="longitudeInput" readonly />
+
+    <button onclick="showCurrentLocation()">Show Current Location</button>
+
+    <div id="map"></div>
+
+    <script>
+      function showCurrentLocation() {
+        // Check if geolocation is supported by the browser
+        if ("geolocation" in navigator) {
+          // Get current location
+          navigator.geolocation.getCurrentPosition(
+            function (position) {
+              const latitude = position.coords.latitude;
+              const longitude = position.coords.longitude;
+
+              // Update the latitude and longitude inputs
+              document.getElementById("latitudeInput").value = latitude;
+              document.getElementById("longitudeInput").value = longitude;
+
+              // Create a map centered at the current location
+              const map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: latitude, lng: longitude },
+                zoom: 15, // Adjust the zoom level as needed
+              });
+
+              // Create a marker at the current location
+              const marker = new google.maps.Marker({
+                position: { lat: latitude, lng: longitude },
+                map: map,
+                title: "Current Location",
+              });
+            },
+            function (error) {
+              console.error("Error getting geolocation:", error.message);
+            }
+          );
+        } else {
+          console.error("Geolocation is not supported by your browser");
+        }
+      }
+    </script>
+  </body>
+</html>
